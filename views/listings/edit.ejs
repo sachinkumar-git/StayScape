@@ -4,40 +4,47 @@
   <div class="col-8 offset-2">
     <h3>Edit your Listing</h3>
     
-    <form method="POST" action="/listings/<%= listing._id %>?_method=PUT">
+    <form method="POST" action="/listings/<%= listing._id %>?_method=PUT" novalidate class="needs-validation">
 
       <div class="mb-3">
         <label for="title" class="form-label">Title</label>
-        <input name="listing[title]" value="<%= listing.title %>" type="text" class="form-control" id="title" />
+        <input name="listing[title]" value="<%= listing.title %>" type="text" class="form-control" id="title"
+        required />
+         <div class="valid-feedback">Title looks good</div>
       </div>
 
       <div class="mb-3">
         <label for="description" class="form-label">Description</label>
-        <textarea name="listing[description]" class="form-control" id="description"><%= listing.description %></textarea>
+        <textarea name="listing[description]" class="form-control" id="description" required><%= listing.description %>  </textarea>
+         <div class="invalid-feedback">Please enter a short discription</div>
       </div>
 
       <div class="mb-3">
         <label for="image" class="form-label">Image Link</label>
         <!-- Yahan listing.image ko listing.image.url kiya hai -->
-        <input name="listing[image]" value="<%= listing.image.url %>" type="text" class="form-control" id="image" />
+        <input name="listing[image]" value="<%= listing.image.url %>" type="text" class="form-control" id="image" required /> 
+         <div class="invalid-feedback">Please enter a valid Link for image</div>
       </div>
 
       <!-- Price aur Country ko ek sath side-by-side dikhane ke liye col-md classes add ki hain -->
       <div class="row">
         <div class="mb-3 col-md-4">
           <label for="price" class="form-label">Price</label>
-          <input name="listing[price]" value="<%= listing.price %>" type="number" class="form-control" id="price" />
+          <input name="listing[price]" value="<%= listing.price %>" type="number" class="form-control" id="price" required/>
+           <div class="invalid-feedback">Please enter a valid Price</div>
         </div>
         
         <div class="mb-3 col-md-8">
           <label for="country" class="form-label">Country</label>
-          <input name="listing[country]" value="<%= listing.country %>" type="text" class="form-control" id="country" />
+          <input name="listing[country]" value="<%= listing.country %>" type="text" class="form-control" id="country" required />
+            <div class="invalid-feedback">Please enter the Country name</div>
         </div>
       </div>
 
       <div class="mb-3">
         <label for="location" class="form-label">Location</label>
-        <input name="listing[location]" value="<%= listing.location %>" type="text" class="form-control" id="location" />
+        <input name="listing[location]" value="<%= listing.location %>" type="text" class="form-control" id="location" required />
+          <div class="invalid-feedback">Please enter the location</div>
       </div>
 
       <!-- Thoda margin top and bottom diya button ko achhe look ke liye -->
@@ -46,3 +53,5 @@
     </form>
   </div>
 </div>
+
+<script src="/js/script.js"></script>
