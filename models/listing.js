@@ -6,11 +6,10 @@ const Review = require("./review");
 const listingSchema = new Schema({
   title: {
     type: String,
-    required: true, // "require" ko "required" kiya hai
+    required: true, 
   },
   description: String,
   image: {
-    // Ab image ek object ban gaya hai jisme filename aur url hai
     filename: String,
     url: {
       type: String,

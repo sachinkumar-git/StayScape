@@ -11,7 +11,7 @@ router.get("/signup", (req, res) => {
 
 router.post(
   "/signup",
-  // Fix 1: Added 'next' here
+
   wrapAsync(async (req, res, next) => {
     try {
       let { username, email, password } = req.body;
@@ -23,7 +23,6 @@ router.post(
           return next(err);
         }
         req.flash("success", "Welcome to Wanderlust!");
-        // Fix 2: Changed to static route since locals won't have redirectUrl here
         res.redirect("/listings");
       });
     } catch (e) {
@@ -33,7 +32,7 @@ router.post(
   })
 );
 
-// Yeh GET login route add karna zaroori hai
+
 router.get("/login", (req, res) => {
   res.render("users/login.ejs");
 });
@@ -47,7 +46,7 @@ router.post(
   }),
   async (req, res) => {
     req.flash("success", "Welcome back to Wanderlust!");
-    // Fix 3: Changed req to res, and added fallback route
+ 
     let redirectUrl = res.locals.redirectUrl || "/listings";
     res.redirect(redirectUrl);
   }

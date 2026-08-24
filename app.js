@@ -88,7 +88,6 @@ app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewsRouter);
 app.use("/", userRouter);
 
-// Catch-all Route for 404 (FIXED)
 app.use((req, res, next) => {
     next(new ExpressError(404, "Page Not Found!"));
 })
