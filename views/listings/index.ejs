@@ -3,6 +3,7 @@
   #filters {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
 }
 
 .filter {
@@ -19,40 +20,81 @@
 .filter p{
   font-size: 0.8rem ;
 }
+.tax-info {
+  display: none;
+}
+.tax-toggle {
+  border: 1px solid black;
+  width: 230px;
+  border-radius: 1rem;
+  height: 3.25rem;
+  padding: 1rem;
+  margin-left: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 </style>
 
 <div id="filters">
-  <div class="filter">
-    <div><i class="fa-solid fa-fire"></i></div>
-    <p>Trending</p>
+  <div class="filter" data-filter="Trending">
+                <div><i class="fa-solid fa-fire"></i></div>
+                <p>Trending</p>
+            </div>
+            <div class="filter" data-filter="Rooms">
+                <div><i class="fa-solid fa-bed"></i></div>
+                <p>Rooms</p>
+            </div>
+            <div class="filter" data-filter="Iconic Cities">
+                <div><i class="fa-solid fa-mountain-city"></i></div>
+                <p>Cities</p>
+            </div>
+            <div class="filter" data-filter="Mountains">
+                <div><i class="fa-solid fa-mountain"></i></div>
+                <p>Mountains</p>
+            </div>
+            <div class="filter" data-filter="Castles">
+                <div><i class="fa-brands fa-fort-awesome"></i></div>
+                <p>Castles</p>
+            </div>
+            <div class="filter" data-filter="Amazing pools">
+                <div><i class="fa-solid fa-person-swimming"></i></div>
+                <p>Pools</p>
+            </div>
+            <div class="filter" data-filter="Camping">
+                <div><i class="fa-solid fa-campground"></i></div>
+                <p>Camping</p>
+            </div>
+            <div class="filter" data-filter="Farms">
+                <div><i class="fa-solid fa-cow"></i></div>
+                <p>Farms</p>
+            </div>
+            <div class="filter" data-filter="Arctic">
+                <div><i class="fa-regular fa-snowflake"></i></div>
+                <p>Arctic</p>
+            </div>
+            <div class="filter" data-filter="Domes">
+                <div><i class="fa-solid fa-igloo"></i></div>
+                <p>Domes</p>
+            </div>
+            <div class="filter" data-filter="Boats">
+                <div><i class="fa-solid fa-ship"></i></div>
+                <p>Boats</p>
+            </div>
+
+<div class="tax-toggle">
+  <div class="form-check-reverse form-switch">
+    <input
+      class="form-check-input"
+      type="checkbox"
+      role="switch"
+      id="flexSwitchCheckDefault"
+    />
+    <label class="form-check-label" for="flexSwitchCheckDefault"
+      >Display Taxes</label
+    >
   </div>
-  <div class="filter">
-    <div><i class="fa-solid fa-bed"></i></div>
-    <p>Rooms</p>
-  </div>
-  <div class="filter">
-   <div><i class="fa-solid fa-mountain-city"></i></div>
-   <p>Iconic Cities</p>
-  </div>
-  <div class="filter">
-  <div><i class="fa-solid fa-mountain"></i></div>
-  <p>Mountains</p>
-</div>
-<div class="filter">
-  <div><i class="fa-brands fa-fort-awesome"></i></div>
-  <p>Castles</p>
-</div>
-<div class="filter">
-  <div><i class="fa-solid fa-campground"></i></div>
-  <p>Camping</p>
-</div>
-<div class="filter">
-  <div><i class="fa-solid fa-cow"></i></div>
-  <p>Farms</p>
-</div>
-<div class="filter">
-  <div><i class="fa-solid fa-person-swimming"></i></div>
-  <p>Amazing Pools</p>
 </div>
 </div>
 
@@ -74,6 +116,7 @@
               </b>
             </p>
             &#8377; <%= listing.price.toLocaleString("en-IN") %> /night
+            <i class="tax-info"> &nbsp; &nbsp; +18% GST</i>
 
           </div>
         </div>
@@ -81,4 +124,16 @@
   </div>
 
 
-  </a>
+<script>
+let taxSwitch = document.getElementById("flexSwitchCheckDefault");
+taxSwitch.addEventListener("click", () => {
+  let taxInfo = document.getElementsByClassName("tax-info");
+  for (info of taxInfo) {
+    if (info.style.display != "inline") {
+      info.style.display = "inline";
+    } else {
+      info.style.display = "none";
+    }
+  }
+});
+</script>
