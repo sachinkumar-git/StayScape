@@ -23,22 +23,42 @@ module.exports.showListing = async (req, res) => {
     req.flash("error", "Listing you requested for does not exist!");
     res.redirect("/listings");
   }
-  console.log(listing);
+  console.log("Current Listing Geometry:", listing.geometry);
   res.render("listings/show.ejs", { listing });
 };
 
 module.exports.createListing = async (req, res, next) => {
-    let url = req.file.path;
-    let filename = req.file.filename;
-    console.log(url, "..", filename);
-    const newListing = new Listing(req.body.listing);
-    newListing.owner = req.user._id;
-    newListing.image = {url, filename};
-    await newListing.save();
-    req.flash("success", "New Listing Created!");
-    res.redirect("/listings");
-   };
+  let url = req.file.path;
+  let filename = req.file.filename;
+  
+  const locationQuery = req.body.listing.location;
+  
+  let geometry = { type: "Point", coordinates: [77.209, 28.6139] }; 
+  
+  try {
+      const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(locationQuery)}`, {
+          headers: {
+              "User-Agent": "Wanderlust-MERN-Project/1.0"
+          }
+      });
+      const geoData = await response.json();
+      
+      if (geoData && geoData.length > 0) {
+          geometry.coordinates = [parseFloat(geoData[0].lon), parseFloat(geoData[0].lat)];
+      }
+  } catch(err) {
+      console.log("Geocoding failed, using default coordinates.", err);
+  }
 
+  const newListing = new Listing(req.body.listing);
+  newListing.owner = req.user._id;
+  newListing.image = {url, filename};
+  newListing.geometry = geometry; 
+  
+  await newListing.save();
+  req.flash("success", "New Listing Created!");
+  res.redirect("/listings");
+};
 
 module.exports.renderEditForm = async (req, res) => {
   let { id } = req.params;
@@ -47,13 +67,48 @@ module.exports.renderEditForm = async (req, res) => {
     req.flash("error", "Listing you requested for does not exist!");
     res.redirect("/listings");
   }
-  res.render("listings/edit.ejs", { listing });
+  let originalImageUrl = listing.image.url;
+  originalImageUrl = originalImageUrl.replace("/upload", "/upload/w_250");
+  res.render("listings/edit.ejs", { listing, originalImageUrl });
 };
-
 
 module.exports.updateListing = async (req, res) => {
   let { id } = req.params;
-  await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+  
+  let geometry = undefined;
+  if(req.body.listing.location) {
+      try {
+          const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(req.body.listing.location)}`, {
+              headers: {
+                  "User-Agent": "Wanderlust-MERN-Project/1.0"
+              }
+          });
+          const geoData = await response.json();
+          if (geoData && geoData.length > 0) {
+              geometry = { 
+                  type: "Point", 
+                  coordinates: [parseFloat(geoData[0].lon), parseFloat(geoData[0].lat)] 
+              };
+          }
+      } catch(err) {
+          console.log("Geocoding failed during update.");
+      }
+  }
+
+  let updatedData = { ...req.body.listing };
+  if(geometry) {
+      updatedData.geometry = geometry;
+  }
+  
+  let listing = await Listing.findByIdAndUpdate(id, updatedData);
+    
+  if (typeof req.file !== "undefined") {
+      let url = req.file.path;
+      let filename = req.file.filename;
+      listing.image = { url, filename };
+      await listing.save();
+  }
+    
   req.flash("success", "Listing Updated!");
   res.redirect(`/listings/${id}`);
 };
