@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
-const review = require("./review");
-const Schema = mongoose.Schema;
 const Review = require("./review");
+const Schema = mongoose.Schema;
 
 const listingSchema = new Schema({
   title: {
@@ -16,6 +15,17 @@ const listingSchema = new Schema({
   price: Number,
   location: String,
   country: String,
+  geometry: {
+    type: {
+      type: String,
+      enum: ['Point'], 
+      required: true
+    },
+    coordinates: {
+      type: [Number],
+      required: true
+    }
+  },
   reviews: [
     {
       type: Schema.Types.ObjectId,
